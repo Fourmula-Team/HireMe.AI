@@ -13,8 +13,33 @@
 
     {{-- Card form --}}
     <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <form action="#" method="POST" class="space-y-4">
+        <form action="{{ route('register') }}" method="POST" class="space-y-4">
             @csrf
+
+            {{-- Account Type (tombol dummy, opsional bisa dihubungkan ke radio di bawah jika mau) --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">I want to</label>
+                <div class="flex space-x-2">
+                    <button type="button" class="w-1/2 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-100">Find a Job</button>
+                    <button type="button" class="w-1/2 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-100">Hire Talent</button>
+                </div>
+            </div>
+
+            {{-- Role Selection --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Register as</label>
+                <div class="flex space-x-4">
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" name="role" value="APPLICANT" required class="focus:ring focus:ring-blue-300">
+                        <span class="text-gray-700">Applicant</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" name="role" value="RECRUITER" required class="focus:ring focus:ring-blue-300">
+                        <span class="text-gray-700">Recruiter</span>
+                    </label>
+                </div>
+            </div>
+
 
             {{-- Account Type --}}
             <div>
@@ -27,7 +52,7 @@
 
             {{-- First & Last Name --}}
             <div class="flex space-x-2">
-                  <div class="w-1/2">
+                <div class="w-1/2">
                     <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
                     <input type="text" name="first_name" placeholder="John" id="first_name" required class="w-full border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-200">
                 </div>
@@ -67,5 +92,6 @@
             </button>
         </form>
     </div>
+
 </section>
 @endsection
