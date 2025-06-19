@@ -6,14 +6,14 @@
         Log in to your account
     </h2>
     <p class="mt-2 text-sm text-gray-600">
-        Or <a href="" class="font-medium text-blue-600 hover:text-blue-500">create a new account</a>
+        Or <a href="{{ url('/register') }}" class="font-medium text-blue-600 hover:text-blue-500">create a new account</a>
     </p>
 
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow mt-[-150px]">
             <div class="text-left"></div>
 
-            <form class="mt-8 space-y-6" action="" method="POST">
+            <form class="mt-8 space-y-6" action="{{ route('login') }}" method="POST">
                 @csrf
 
                 <div>
@@ -144,4 +144,18 @@
             setAccountType('job_seeker');
         };
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Daftar',
+                text: '{{ session("success") }}',
+                showConfirmButton: true,
+            });
+        });
+    </script>
+    @endif
     @endsection
