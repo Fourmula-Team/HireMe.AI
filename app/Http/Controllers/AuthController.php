@@ -17,36 +17,37 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-// ✅ Validasi semua input form, termasuk role
-        $request->validate([
-            'email'      => 'required|email|unique:md_auth,EMAIL_USER',
-            'first_name' => 'required|string|max:50',
-            'last_name'  => 'required|string|max:50',
-            'username'   => 'required|string|max:255|unique:md_auth,USERNAME',
-            'password'   => 'required|string|min:6|confirmed',
-            'role'       => 'required|in:APPLICANT,RECRUITER',
-        ]);
+        // $request->validate([
+        //     'email'      => 'required|email|unique:md_auth,EMAIL_USER',
+        //     'first_name' => 'required|string|max:50',
+        //     'last_name'  => 'required|string|max:50',
+        //     'username'   => 'required|string|max:255|unique:md_auth,USERNAME',
+        //     'password'   => 'required|string|min:6|confirmed',
+        //     'role'       => 'required|in:APPLICANT,RECRUITER',
+        // ]);
 
-        // ✅ Tentukan ID_ROLE sesuai pilihan radio button
-        $roleId = $request->role == 'APPLICANT' ? 2 : 3; // 2 = APPLICANT, 3 = RECRUITER
+        $roleId = $request->role == 'APPLICANT' ? 2 : 3;
 
+        try {
+            $inserted = DB::table('md_auth')->insert([
+                'EMAIL_USER' => $request->email,
+                'FIRST_NAME' => $request->first_name,
+                'LAST_NAME'  => $request->last_name,
+                'USERNAME'   => $request->username,
+                'PASSWORD'   => Hash::make($request->password),
+                'ROLE'       => $roleId,
+                'CREATED_AT' => now(),
+                'ID'         => (string) Str::uuid(),
+            ]);
 
-        DB::table('md_auth')->insert([
-            'EMAIL_USER' => $request->email,
-            'FIRST_NAME' => $request->first_name,
-            'LAST_NAME'  => $request->last_name,
-            'USERNAME'   => $request->username,
-            'PASSWORD'   => Hash::make($request->password),
-            'ROLE'       => 2, // 2 = APPLICANT
-            'ID'         => Str::uuid(),
-        ]);
+            if (!$inserted) {
+                return back()->withErrors(['register' => 'Gagal membuat akun.'])->withInput();
+            }
 
-
-        // return redirect('/login')->with('success', 'Register berhasil! Silakan login.');
-        // return redirect('login')->with(['succ_msg' => 'Berhasil daftar']);
-        return redirect()->route('login')->with('success', 'Register berhasil! Silakan login.');
-        // return redirect()->back()->with('error', 'Terjadi kesalahan, silakan coba lagi.');
-
+            return redirect()->route('login')->with('success', 'Register berhasil! Silakan login.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['register' => 'Error: ' . $e->getMessage()])->withInput();
+        }
     }
 
     public function LoginForm()
@@ -67,17 +68,23 @@ class AuthController extends Controller
             return back()->withErrors(['email' => 'Email atau Password salah!'])->withInput();
         }
 
-        // Ambil nama role dari tabel md_role
         $role = DB::table('md_role')->where('ID_ROLE', $user->ROLE)->first();
 
         Session::put('user', [
             'email'     => $user->EMAIL_USER,
             'username'  => $user->USERNAME,
-            'role'      => $user->ROLE, // ID Role
-            'role_name' => $role ? $role->ROLE : null, // Nama Role: ADMIN/APPLICANT/RECRUITER
+            'role'      => $user->ROLE,
+            'role_name' => $role ? $role->ROLE : null,
             'id'        => $user->ID,
         ]);
 
-        return redirect('/user-dashboard')->with('success', 'Login berhasil!');
+        // Redirect sesuai role
+        if ($role && $role->ROLE == 'APPLICANT') {
+            return redirect('/applicant-dashboard')->with('success', 'Login berhasil sebagai Applicant');
+        } elseif ($role && $role->ROLE == 'RECRUITER') {
+            return redirect('/recruiter-dashboard')->with('success', 'Login berhasil sebagai Recruiter');
+        } else {
+            return redirect('/')->with('success', 'Login berhasil!');
+        }
     }
 }

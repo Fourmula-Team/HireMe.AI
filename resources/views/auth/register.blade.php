@@ -11,19 +11,32 @@
         </p>
     </div>
 
+
+
     {{-- Card form --}}
     <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+        @if (session('success'))
+        <div class="text-green-600 mb-3 text-sm">{{ session('success') }}</div>
+        @endif
+        @if ($errors->any())
+        <div class="text-red-600 mb-3 text-sm">
+            @foreach ($errors->all() as $error)
+            <p>{{ $error }}</p>
+            @endforeach
+        </div>
+        @endif
+
         <form action="{{ route('register') }}" method="POST" class="space-y-4">
             @csrf
 
             {{-- Account Type (tombol dummy, opsional bisa dihubungkan ke radio di bawah jika mau) --}}
-            <div>
+            <!-- <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">I want to</label>
                 <div class="flex space-x-2">
                     <button type="button" class="w-1/2 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-100">Find a Job</button>
                     <button type="button" class="w-1/2 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-100">Hire Talent</button>
                 </div>
-            </div>
+            </div> -->
 
             {{-- Role Selection --}}
             <div>
@@ -40,15 +53,6 @@
                 </div>
             </div>
 
-
-            {{-- Account Type --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">I want to</label>
-                <div class="flex space-x-2">
-                    <button type="button" class="w-1/2 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-100">Find a Job</button>
-                    <button type="button" class="w-1/2 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-100">Hire Talent</button>
-                </div>
-            </div>
 
             {{-- First & Last Name --}}
             <div class="flex space-x-2">

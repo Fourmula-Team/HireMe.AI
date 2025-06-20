@@ -25,4 +25,14 @@ class ApplicantController extends Controller
         view('applicant.interviewai', $data).
         view('applicant.footer');
     }
+
+    public function index_recruiter_dashboard()
+    {
+      $data['title'] = 'recruiter Dashboard';
+        return 
+        view('applicant.header').
+        view('applicant.dashboard', $data).
+        view('applicant.footer');  
+    }
 }
+
