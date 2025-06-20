@@ -18,11 +18,11 @@
 
                 <div>
 
-                    <div class="text-left">
+                    <!-- <div class="text-left">
                         <label for="account_type" class="block text-sm font-medium text-gray-700 mb-2 text-left">
                             Account Type
                         </label>
-                        <div class="flex space-x-4">
+                         <div class="flex space-x-4">
                             <button
                                 type="button"
                                 onclick="setAccountType('job_seeker')"
@@ -37,9 +37,9 @@
                                 class="flex-1 py-2 px-4 border rounded-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-1">
                                 Hire Talent
                             </button>
-                        </div>
+                        </div> 
                         <input type="hidden" name="account_type" id="account_type" value="job_seeker" />
-                    </div>
+                    </div> -->
 
                     <!-- Email -->
                     <div class="mt-4 text-left">

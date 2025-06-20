@@ -12,20 +12,29 @@ Route::get('/', [Homepage::class, 'index']);
 Route::get('/login', [AuthController::class, 'LoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-Route::get('/user-dashboard', [ApplicantController::class, 'index_dashboard']);
-Route::get('/user-interview', [ApplicantController::class, 'index_interview']);
-
 Route::get('/register', [AuthController::class, 'RegisterForm']);
-Route::post('/registerpage', [AuthController::class, 'register'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+
 
 Route::middleware(['usersession:ADMIN'])->group(function () {
-    return 'Ini halaman untuk ADMIN';
+    // Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 
 Route::middleware(['usersession:RECRUITER'])->group(function () {
-    return 'Ini halaman untuk ADMIN';
+    Route::get('/recruiter-dashboard', [ApplicantController::class, 'index_recruiter_dashboard'])->name('recruiter.dashboard');
 });
 
+// Route::middleware(['usersession:APPLICANT'])->group(function () {
+//     Route::get('/applicant-dashboard', [ApplicantController::class, 'index_dashboard'])->name('applicant.dashboard');
+// });
+
+// testing
 Route::middleware(['usersession:APPLICANT'])->group(function () {
-    return 'Ini halaman untuk ADMIN';
+    Route::get('/applicant-dashboard', [ApplicantController::class, 'index_dashboard'])->name('applicant.dashboard');
 });
+
+// Route::middleware(['usersession:RECRUITER'])->group(function () {
+//     Route::get('/recruiter-dashboard', function () {return 'Welcome to Recruiter Dashboard';
+//     })->name('recruiter.dashboard');
+// });
+
