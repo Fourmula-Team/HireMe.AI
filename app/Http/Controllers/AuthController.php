@@ -18,18 +18,28 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         // $request->validate([
-        //     'email'      => 'required|email|unique:md_auth,EMAIL_USER',
+        //     'email'      => 'required|email',
         //     'first_name' => 'required|string|max:50',
         //     'last_name'  => 'required|string|max:50',
-        //     'username'   => 'required|string|max:255|unique:md_auth,USERNAME',
+        //     'username'   => 'required|string|max:255',
         //     'password'   => 'required|string|min:6|confirmed',
         //     'role'       => 'required|in:APPLICANT,RECRUITER',
         // ]);
 
         $roleId = $request->role == 'APPLICANT' ? 2 : 3;
+        $roleName = $request->role == 'APPLICANT' ? 'applicant' : 'recruiter';
+
+        // ✅ Cek email sudah ada atau belum
+        $existingUser = DB::table('md_auth')->where('EMAIL_USER', $request->email)->first();
+        if ($existingUser) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun yang Anda daftarkan sudah digunakan, silakan gunakan email yang berbeda.'
+            ]);
+        }
 
         try {
-            $inserted = DB::table('md_auth')->insert([
+            DB::table('md_auth')->insert([
                 'EMAIL_USER' => $request->email,
                 'FIRST_NAME' => $request->first_name,
                 'LAST_NAME'  => $request->last_name,
@@ -40,13 +50,15 @@ class AuthController extends Controller
                 'ID'         => (string) Str::uuid(),
             ]);
 
-            if (!$inserted) {
-                return back()->withErrors(['register' => 'Gagal membuat akun.'])->withInput();
-            }
-
-            return redirect()->route('login')->with('success', 'Register berhasil! Silakan login.');
+            return response()->json([
+                'success' => true,
+                'message' => "Berhasil mendaftar sebagai {$roleName}."
+            ]);
         } catch (\Exception $e) {
-            return back()->withErrors(['register' => 'Error: ' . $e->getMessage()])->withInput();
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat membuat akun.'
+            ]);
         }
     }
 
@@ -65,7 +77,7 @@ class AuthController extends Controller
         $user = DB::table('md_auth')->where('EMAIL_USER', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->PASSWORD)) {
-            return back()->withErrors(['email' => 'Email atau Password salah!'])->withInput();
+            return response()->json(['success' => false, 'message' => 'Email atau password salah.']);
         }
 
         $role = DB::table('md_role')->where('ID_ROLE', $user->ROLE)->first();
@@ -78,13 +90,17 @@ class AuthController extends Controller
             'id'        => $user->ID,
         ]);
 
-        // Redirect sesuai role
+        $roleName = strtolower($role->ROLE ?? 'user');
+        $message = "Selamat datang {$roleName}!";
+
         if ($role && $role->ROLE == 'APPLICANT') {
-            return redirect('/applicant-dashboard')->with('success', 'Login berhasil sebagai Applicant');
+            return response()->json(['success' => true, 'message' => $message, 'redirect' => '/applicant-dashboard']);
         } elseif ($role && $role->ROLE == 'RECRUITER') {
-            return redirect('/recruiter-dashboard')->with('success', 'Login berhasil sebagai Recruiter');
-        } else {
-            return redirect('/')->with('success', 'Login berhasil!');
+            return response()->json(['success' => true, 'message' => $message, 'redirect' => '/recruiter-dashboard']);
+        } elseif ($role && $role->ROLE == 'ADMIN') {
+            return response()->json(['success' => true, 'message' => $message, 'redirect' => '/']);
         }
+
+        return response()->json(['success' => true, 'message' => $message, 'redirect' => '/']);
     }
 }
