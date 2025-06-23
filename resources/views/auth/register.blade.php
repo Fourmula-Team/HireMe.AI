@@ -29,15 +29,6 @@
         <form action="{{ route('register') }}" method="POST" class="space-y-4">
             @csrf
 
-            {{-- Account Type (tombol dummy, opsional bisa dihubungkan ke radio di bawah jika mau) --}}
-            <!-- <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">I want to</label>
-                <div class="flex space-x-2">
-                    <button type="button" class="w-1/2 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-100">Find a Job</button>
-                    <button type="button" class="w-1/2 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-100">Hire Talent</button>
-                </div>
-            </div> -->
-
             {{-- Role Selection --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Register as</label>
@@ -98,4 +89,48 @@
     </div>
 
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '{{ route("login") }}';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: data.message,
+                            showConfirmButton: true
+                        });
+                    }
+                })
+                .catch(err => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan. Silakan coba lagi.'
+                    });
+                });
+        });
+    });
+</script>
 @endsection

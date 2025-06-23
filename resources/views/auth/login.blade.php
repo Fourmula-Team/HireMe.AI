@@ -17,30 +17,6 @@
                 @csrf
 
                 <div>
-
-                    <!-- <div class="text-left">
-                        <label for="account_type" class="block text-sm font-medium text-gray-700 mb-2 text-left">
-                            Account Type
-                        </label>
-                         <div class="flex space-x-4">
-                            <button
-                                type="button"
-                                onclick="setAccountType('job_seeker')"
-                                id="job_seeker_btn"
-                                class="flex-1 py-2 px-4 border rounded-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-1">
-                                Find a Job
-                            </button>
-                            <button
-                                type="button"
-                                onclick="setAccountType('employer')"
-                                id="employer_btn"
-                                class="flex-1 py-2 px-4 border rounded-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-1">
-                                Hire Talent
-                            </button>
-                        </div> 
-                        <input type="hidden" name="account_type" id="account_type" value="job_seeker" />
-                    </div> -->
-
                     <!-- Email -->
                     <div class="mt-4 text-left">
                         <label for="email" class="block text-sm font-medium text-gray-700 text-left">
@@ -116,46 +92,55 @@
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        function setAccountType(type) {
-            document.getElementById('account_type').value = type;
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-            const jobSeekerBtn = document.getElementById('job_seeker_btn');
-            const employerBtn = document.getElementById('employer_btn');
+            const formData = new FormData(form);
 
-            if (type === 'job_seeker') {
-                jobSeekerBtn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
-                jobSeekerBtn.classList.remove('bg-white', 'text-gray-700', 'border-gray-300');
-
-                employerBtn.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
-                employerBtn.classList.add('bg-white', 'text-gray-700', 'border-gray-300');
-            } else {
-                employerBtn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
-                employerBtn.classList.remove('bg-white', 'text-gray-700', 'border-gray-300');
-
-                jobSeekerBtn.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
-                jobSeekerBtn.classList.add('bg-white', 'text-gray-700', 'border-gray-300');
-            }
-        }
-
-        // Set default state on page load
-        window.onload = () => {
-            setAccountType('job_seeker');
-        };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @if(session('success'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil Daftar',
-                text: '{{ session("success") }}',
-                showConfirmButton: true,
-            });
+            fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: data.message,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            position: 'center'
+                        }).then(() => {
+                            window.location.href = data.redirect;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Login Gagal!',
+                            text: data.message,
+                            showConfirmButton: true
+                        });
+                    }
+                })
+                .catch(err => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan. Silakan coba lagi.'
+                    });
+                });
         });
-    </script>
-    @endif
-    @endsection
+    });
+</script>
+
+@endsection
