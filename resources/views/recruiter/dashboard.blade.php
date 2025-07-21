@@ -71,13 +71,13 @@
                             </div>
 
                             <div class="mb-4">
-                              <label for="req_skill" class="text-sm font-semibold text-black">Required Skills</label>
-                              <textarea name="req_skill" id="req_skill" rows="4"
-                                  class="block w-full px-3 py-2 mt-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm resize-y"
-                                  placeholder="Tuliskan skill yang dibutuhkan, misalnya: JavaScript, UI/UX Design, Leadership..."></textarea>
-                              <p class="text-xs text-gray-400 text-end mt-1">0/500 character</p>
-                          </div>
-                          
+                                <label for="req_skill" class="text-sm font-semibold text-black">Required Skills</label>
+                                <textarea name="req_skill" id="req_skill" rows="4"
+                                    class="block w-full px-3 py-2 mt-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm resize-y"
+                                    placeholder="Tuliskan skill yang dibutuhkan, misalnya: JavaScript, UI/UX Design, Leadership..."></textarea>
+                                <p class="text-xs text-gray-400 text-end mt-1">0/500 character</p>
+                            </div>
+
 
                         </div>
                     </div>
@@ -161,7 +161,11 @@
                         <div class="p-4 text-center">
                             <img src="{{ asset('images/homepage/icon_profile_default.png') }}" alt=""
                                 class="w-20 h-20 rounded-full mx-auto mb-1">
-                            <h2 class="text-md font-semibold text-gray-800">Marcello Ilham</h2>
+                            <h2 class="text-md font-semibold text-gray-800">
+                                <span>{{ $recruiter->FIRST_NAME }} {{ $recruiter->LAST_NAME }}</span>
+
+                            </h2>
+
                             <p class="text-gray-500 text-sm mb-4">
                                 Senior Frontend Developer
                             </p>

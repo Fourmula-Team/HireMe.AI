@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'My Website' }}</title>
+
+    <link rel="icon" type="image/png" href="{{ asset('images/homepage/logo_only_website.png') }}">
+    <title>{{ $title ?? 'HireMe.AI' }}</title>
 
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>

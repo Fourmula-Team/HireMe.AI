@@ -2,8 +2,10 @@
 <header class="bg-white shadow">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
         <!-- Logo -->
-        <div class="text-2xl font-bold text-blue-600">
-            <a href="{{ url('/') }}">MySite</a>
+        <div class="h-10">
+            <a href="{{ url('/') }}">
+                <img src="{{ asset('images/homepage/logo_full_website.png') }}" alt="MySite Logo" class="h-full object-contain">
+            </a>
         </div>
 
         <!-- Navigation Menu -->
@@ -16,8 +18,8 @@
 
         <!-- Button Login / Signup -->
         <div class="hidden md:block">
-            <a href="{{ url('/register') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                Register
+            <a href="{{ url('/login') }}" class="bg-blue-600 text-white text-sm font-bold px-5 py-3 rounded hover:bg-blue-700">
+                LOGIN
             </a>
         </div>
 
@@ -40,7 +42,8 @@
         <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Tentang</a>
         <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Layanan</a>
         <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Kontak</a>
-        <a href="{{ url('/register') }}" class="block py-2 mt-2 bg-blue-600 text-white text-center rounded hover:bg-blue-700">
+        <a href="{{ url('/register') }}"
+            class="block py-2 mt-2 bg-blue-600 text-white text-center rounded hover:bg-blue-700">
             Register
         </a>
     </div>

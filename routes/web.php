@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Homepage;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RecruiterController;
 use App\Http\Controllers\ApplicantController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,20 +22,11 @@ Route::middleware(['usersession:ADMIN'])->group(function () {
 });
 
 Route::middleware(['usersession:RECRUITER'])->group(function () {
-    Route::get('/recruiter-dashboard', [ApplicantController::class, 'index_recruiter_dashboard'])->name('recruiter.dashboard');
+    // Route::get('/recruiter-dashboard', [ApplicantController::class, 'index_recruiter_dashboard'])->name('recruiter.dashboard');
+    Route::get('/recruiter-dashboard', [RecruiterController::class, 'index_dashboard'])->name('recruiter.dashboard');
 });
 
-// Route::middleware(['usersession:APPLICANT'])->group(function () {
-//     Route::get('/applicant-dashboard', [ApplicantController::class, 'index_dashboard'])->name('applicant.dashboard');
-// });
-
-// testing
 Route::middleware(['usersession:APPLICANT'])->group(function () {
     Route::get('/applicant-dashboard', [ApplicantController::class, 'index_dashboard'])->name('applicant.dashboard');
+    Route::post('/check-cv', [ApplicantController::class, 'checkCv'])->name('check.cv');
 });
-
-// Route::middleware(['usersession:RECRUITER'])->group(function () {
-//     Route::get('/recruiter-dashboard', function () {return 'Welcome to Recruiter Dashboard';
-//     })->name('recruiter.dashboard');
-// });
-
